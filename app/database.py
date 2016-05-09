@@ -15,4 +15,5 @@ Base.query = db_session.query_property()
 
 def init_db():
     from app.models import FreeVideo
+    from app.models import User
     Base.metadata.create_all(bind=engine)
