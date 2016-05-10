@@ -16,4 +16,7 @@ Base.query = db_session.query_property()
 def init_db():
     from app.models import FreeVideo
     from app.models import User
+    from app.models import News
+    from app.models import Comment
+    from app.models import History
     Base.metadata.create_all(bind=engine)
