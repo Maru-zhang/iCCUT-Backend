@@ -15,7 +15,7 @@ class FreeVideo(db.Model):
         self.title = title
         self.url = url
         self.leve1 = leve1
-        self.leve2 = leve1
+        self.leve2 = leve2
 
     def __repr__(self):
         return '<FreeVideo %r>' % self.title
