@@ -2,19 +2,6 @@ __author__ = 'Maru'
 
 from app import db
 
-
-class Person(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
-    addresses = db.relationship('Address', backref='person',
-                                lazy='dynamic')
-
-
-class Address(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50))
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id'))
-
 class Video(db.Model):
 
     id = db.Column(db.Integer,primary_key=True)
@@ -23,7 +10,7 @@ class Video(db.Model):
     leve1 = db.Column(db.String(255))
     leve2 = db.Column(db.String(255))
     cover = db.Column(db.String(255))
-    comment = db.relationship('Comment',backref=db.backref('video'),lazy='dynamic')
+    comments = db.relationship('Comment',backref=db.backref('video'),lazy='dynamic')
 
 
     def  __init__(self,title,url,leve1,leve2,cover):
@@ -58,14 +45,16 @@ class Comment(db.Model):
     def __repr__(self):
         return '<Comment %r>' % self.content
 
+historys = db.Table('historys',
+    db.Column('video_id',db.Integer,db.ForeignKey('video.id'),
+    db.Column('history_id',db.Integer,db.ForeignKey('history.id'))
+)
 
 class History(db.Model):
-
     id = db.Column(db.Integer,primary_key=True)
+    user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
+    videos = db.relationship('Video',secondary=historys,backref=db.backref('history', lazy='dynamic'))
 
-    def __init__(self,user,video):
-        self.user_id = user
-        self.video_id = video
 
 
 
@@ -92,7 +81,8 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(20))
-    comment = db.relationship('Comment',backref=db.backref('users'),lazy='dynamic')
+    comments = db.relationship('Comment',backref=db.backref('user'),lazy='dynamic')
+    history = db.relationship('History',backref=db.backref(''user),lazy='dynamic',useList=False)
 
 
     def __init__(self, username, email,password):
