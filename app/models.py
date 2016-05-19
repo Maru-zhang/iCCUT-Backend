@@ -13,12 +13,11 @@ class Video(db.Model):
     comments = db.relationship('Comment',backref=db.backref('video'),lazy='dynamic')
 
 
-    def  __init__(self,title,url,leve1,leve2,cover):
+    def  __init__(self,title,url,leve1,leve2):
         self.title = title
         self.url = url
         self.leve1 = leve1
         self.leve2 = leve2
-        self.cover = cover
 
     def __repr__(self):
         return '<FreeVideo %r>' % self.title
@@ -46,7 +45,7 @@ class Comment(db.Model):
         return '<Comment %r>' % self.content
 
 historys = db.Table('historys',
-    db.Column('video_id',db.Integer,db.ForeignKey('video.id'),
+    db.Column('video_id',db.Integer,db.ForeignKey('video.id')),
     db.Column('history_id',db.Integer,db.ForeignKey('history.id'))
 )
 
@@ -82,7 +81,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(20))
     comments = db.relationship('Comment',backref=db.backref('user'),lazy='dynamic')
-    history = db.relationship('History',backref=db.backref(''user),lazy='dynamic',useList=False)
+    history = db.relationship('History',backref=db.backref('user'),uselist=False)
 
 
     def __init__(self, username, email,password):
