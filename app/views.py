@@ -18,6 +18,10 @@ def login():
         email = request.args.get('email')
         password = request.args.get('password')
         user = User.query.filter_by(email=email).first()
+
+        if user == None:
+            return formattingData(code=-1,msg='Not exit such account!',data=[])
+
         if user.password == password:
             return formattingData(200,msg='Login success.',data={
                 "id": user.id,
@@ -32,7 +36,6 @@ def login():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,login failed.',data=[])
 
-    return "dsadas"
 
 @app.route('/test')
 def test():
