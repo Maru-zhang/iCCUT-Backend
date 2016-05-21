@@ -12,6 +12,12 @@ import base64
 #
 
 pageCount = 20
+defCat = {
+    "documentary": "",
+    "study": "",
+    "cartoon": "",
+    "movie": ""
+}
 
 @app.route('/index')
 def index():
@@ -68,7 +74,7 @@ def register():
         return formattingData(code=-1,msg='Sorry,register failed.',data=[])
 
 
-@app.route('/api/newslist')
+@app.route('/api/newslist',methods=['POST'])
 def newsList():
 
     try:
@@ -85,13 +91,39 @@ def newsList():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,fetch list Fail.')
 
+@app.route('/api/vides',methods=['POST','GET'])
+def videoList():
 
-@app.route('/test')
-def test():
+    try:
+        index = request.args.get("index")
+        category = request.args.get("category")
 
-    print User.query.all()
+        if index == None or category == None:
+            return formattingData(code=-1,msg='Sorry,request paramaters are missing!')
 
-    return 'sss'
+        cateMap = defCat[category]
+        result = Video.query.offset(int(pageCount)*int(index)).filter(Video.leve1 == cateMap).limit(pageCount).all()
+        return formattingData(code=200,msg='Fetch videos success.',data=[video.serialize() for video in result])
+
+
+    except KeyError,e:
+        return formattingData(code=-1,msg='Sorry,fetch video list fail.',data=[])
+
+@app.route('/api/commentlist',methods=['POST','GET'])
+def commentList():
+    pass
+
+@app.route('/api/add_comment',methods=['POST','GET'])
+def commitComment():
+    pass
+
+@app.route('/api/historylist',methods=['POST','GET'])
+def historyList():
+    pass
+
+@app.route('/api/add_history',methods=['POST','GET'])
+def addHistory():
+    pass
 
 
 def formattingData(code,msg,data):

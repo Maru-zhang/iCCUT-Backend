@@ -1,5 +1,6 @@
 __author__ = 'Maru'
 
+from datetime import datetime
 from app import db
 
 class Video(db.Model):
@@ -22,24 +23,32 @@ class Video(db.Model):
     def __repr__(self):
         return '<FreeVideo %r>' % self.title
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "url": self.url,
+            "leve1": self.leve1,
+            "leve2": self.leve2,
+            "cover": self.cover
+        }
+
 
 
 class Comment(db.Model):
 
     id = db.Column(db.Integer,primary_key=True)
     content = db.Column(db.String(140))
-    datetime = db.Column(db.DateTime)
-    good = db.Column(db.Integer)
+    datetime = db.Column(db.DateTime,default=datetime.now())
+    good = db.Column(db.Integer,default=0)
     user_id = db.Column(db.Integer,db.ForeignKey('user.id'))
     video_id = db.Column(db.Integer,db.ForeignKey('video.id'))
 
-    def __init__(self,content,datetime,good,user,video):
+    def __init__(self,content,user_id,video_id):
         self.content = content
-        if datetime is None:
-            self.datetime = datetime.utcnow()
-        self.good = good
-        self.user = user
-        self.video = video
+        self.video_id = video_id
+        self.user_id = user_id
+
 
     def __repr__(self):
         return '<Comment %r>' % self.content
