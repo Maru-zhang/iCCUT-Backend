@@ -2,10 +2,16 @@
 __author__ = 'Maru'
 from flask import  render_template,request,redirect,url_for,session,jsonify
 from app import app,db
-from app.models import Video,User
+from app.models import Video,User,News
+import json
 import base64
 
+# 200 == Success
+# -1  == Error
+# -2  == No more data
+#
 
+pageCount = 20
 
 @app.route('/index')
 def index():
@@ -60,6 +66,24 @@ def register():
         })
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,register failed.',data=[])
+
+
+@app.route('/api/newslist')
+def newsList():
+
+    try:
+        index = request.args.get("index")
+
+        if index == None:
+            result = News.query.limit(pageCount).all()
+            return formattingData(code=200,msg='Fetch success.',data=[new.serialize() for new in result])
+
+
+        result = News.query.offset(int(pageCount)*int(index)).limit(pageCount).all()
+        return formattingData(code=200,msg='Fetch success.',data=[new.serialize() for new in result])
+
+    except KeyError,e:
+        return formattingData(code=-1,msg='Sorry,fetch list Fail.')
 
 
 @app.route('/test')

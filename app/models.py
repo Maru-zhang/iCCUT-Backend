@@ -72,6 +72,14 @@ class News(db.Model):
     def __repr__(self):
         return '<News %r>' % self.title
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "url": self.url,
+            "datetime": self.datetime
+        }
+
 
 
 class User(db.Model):
