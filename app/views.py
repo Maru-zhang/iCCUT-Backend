@@ -36,6 +36,31 @@ def login():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,login failed.',data=[])
 
+@app.route('/api/register',methods=['POST','GET'])
+def register():
+    try:
+        name = request.args.get('username')
+        email = request.args.get('email')
+        password = request.args.get('password')
+
+        user = User.query.filter_by(email=email).first()
+
+        if user != None:
+            return formattingData(code=-1,msg='Sorry,this email already been registered!',data=[])
+
+        user = User(username=name,email=email,password=password)
+        db.session.add(user)
+        db.session.commit()
+
+        return formattingData(code=200,msg='Register success!',data={
+            "id":user.id,
+            "username": user.username,
+            "email": user.username,
+            "password": user.password
+        })
+    except KeyError,e:
+        return formattingData(code=-1,msg='Sorry,register failed.',data=[])
+
 
 @app.route('/test')
 def test():
