@@ -14,9 +14,10 @@ class Video(db.Model):
     comments = db.relationship('Comment',backref=db.backref('video'),lazy='dynamic')
 
 
-    def  __init__(self,title,url,leve1,leve2):
+    def  __init__(self,id,title,url,leve1,leve2):
+        self.id    = id
         self.title = title
-        self.url = url
+        self.url   = url
         self.leve1 = leve1
         self.leve2 = leve2
 
@@ -53,6 +54,14 @@ class Comment(db.Model):
     def __repr__(self):
         return '<Comment %r>' % self.content
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "content": self.content,
+            "datetime": self.datetime.strftime('%Y-%m-%d'),
+            "good": self.good
+        }
+
 historys = db.Table('historys',
     db.Column('video_id',db.Integer,db.ForeignKey('video.id')),
     db.Column('history_id',db.Integer,db.ForeignKey('history.id'))
@@ -73,7 +82,8 @@ class News(db.Model):
     url = db.Column(db.String(50))
     datetime = db.Column(db.String(30))
 
-    def __init__(self,title,url,datetime):
+    def __init__(self,id,title,url,datetime):
+        self.id = id
         self.title = title
         self.url = url
         self.datetime = datetime

@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'Maru'
-from flask import  render_template,request,redirect,url_for,session,jsonify
+from flask import  request,jsonify
 from app import app,db
-from app.models import Video,User,News
+from app.models import Video,User,News,Comment
 import json
 import base64
 
@@ -19,7 +19,7 @@ defCat = {
     "movie": ""
 }
 
-@app.route('/index')
+@app.route('/')
 def index():
     return "Hello, this is iCCUT backend!"
 
@@ -111,14 +111,55 @@ def videoList():
 
 @app.route('/api/commentlist',methods=['POST','GET'])
 def commentList():
-    pass
+
+    video_id = request.args.get("videoid")
+    index    = request.args.get("index")
+
+    if video_id == None or index == None:
+        return formattingData(code=-1,msg='Sorry,args are missing.',data=[])
+
+    try:
+        video = Video.query.filter(Video.id == video_id).first()
+        comments = video.comments.offset(int(pageCount)*int(index)).limit(pageCount).all()
+        return formattingData(code=200,msg='Fetch comments success.',data=[com.serialize() for com in comments])
+    except KeyError,e:
+        return formattingData(code=-1,msg='Sorry,fetch list fail.')
+
 
 @app.route('/api/add_comment',methods=['POST','GET'])
 def commitComment():
-    pass
+
+    content = request.args.get("content")
+    user_id = request.args.get("uid")
+    video_id = request.args.get("vid")
+
+    if content == None or user_id == None or video_id == None:
+        return formattingData(code=-1,msg='Args missing.',data=[])
+
+    try:
+        com = Comment(content=content,user_id=user_id,video_id=video_id)
+        db.session.add(com)
+        db.session.commit()
+    except KeyError,e:
+        return formattingData(code=-1,msg='Submit fail.',data=[])
+
 
 @app.route('/api/historylist',methods=['POST','GET'])
 def historyList():
+
+    uid = request.args.get("uid")
+    index = request.args.get("index")
+
+    if uid == None or index == None:
+        return formattingData(code=-1,msg="Args missing.",data=[])
+
+    try:
+
+        user = User.query.filter_by(User.id == uid).first()
+        list = user.history.offset(int(pageCount)*int(index)).limit(pageCount).all()
+    except KeyError,e:
+        return formattingData(code=-1,msg='Fetch hstorys fail.',data=[])
+
     pass
 
 @app.route('/api/add_history',methods=['POST','GET'])
@@ -130,7 +171,7 @@ def formattingData(code,msg,data):
     return jsonify(
         {
             "code": code,
-            "msg": msg,
+            "msg" : msg,
             "data": data
         }
     )
