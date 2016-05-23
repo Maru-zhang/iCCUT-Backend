@@ -79,11 +79,10 @@ class News(db.Model):
 
     id = db.Column(db.Integer,primary_key=True)
     title = db.Column(db.String(50))
-    url = db.Column(db.String(50))
+    url = db.Column(db.String(255))
     datetime = db.Column(db.String(30))
 
-    def __init__(self,id,title,url,datetime):
-        self.id = id
+    def __init__(self,title,url,datetime):
         self.title = title
         self.url = url
         self.datetime = datetime
