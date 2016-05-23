@@ -24,7 +24,7 @@ def index():
     return "Hello, this is iCCUT backend!"
 
 
-@app.route('/api/login',methods=['POST','GET'])
+@app.route('/api/login',methods=['POST'])
 def login():
     try:
         email = request.args.get('email')
@@ -48,7 +48,7 @@ def login():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,login failed.',data=[])
 
-@app.route('/api/register',methods=['POST','GET'])
+@app.route('/api/register',methods=['POST'])
 def register():
     try:
         name = request.args.get('username')
@@ -91,7 +91,7 @@ def newsList():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,fetch list Fail.')
 
-@app.route('/api/vides',methods=['POST','GET'])
+@app.route('/api/vides',methods=['POST'])
 def videoList():
 
     try:
@@ -109,7 +109,7 @@ def videoList():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,fetch video list fail.',data=[])
 
-@app.route('/api/commentlist',methods=['POST','GET'])
+@app.route('/api/commentlist',methods=['POST'])
 def commentList():
 
     video_id = request.args.get("videoid")
@@ -126,7 +126,7 @@ def commentList():
         return formattingData(code=-1,msg='Sorry,fetch list fail.')
 
 
-@app.route('/api/add_comment',methods=['POST','GET'])
+@app.route('/api/add_comment',methods=['POST'])
 def commitComment():
 
     content = request.args.get("content")
@@ -144,7 +144,7 @@ def commitComment():
         return formattingData(code=-1,msg='Submit fail.',data=[])
 
 
-@app.route('/api/historylist',methods=['POST','GET'])
+@app.route('/api/historylist',methods=['POST'])
 def historyList():
 
     uid = request.args.get("uid")
@@ -162,7 +162,7 @@ def historyList():
 
     pass
 
-@app.route('/api/add_history',methods=['POST','GET'])
+@app.route('/api/add_history',methods=['POST'])
 def addHistory():
     pass
 

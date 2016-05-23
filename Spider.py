@@ -52,7 +52,7 @@ class ParserPage():
 
     def parserNews(self,index):
 
-        url = 'http://news.ccut.edu.cn/sort.php/%s' % index
+        url = 'http://news.ccut.edu.cn/sort.php/1/%s' % index
         print url
 
         try:
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     parser = ParserPage()
 
-    count = 64
+    count = 72
     #
     # while count < 100:
     #     parser.parserVideo()
