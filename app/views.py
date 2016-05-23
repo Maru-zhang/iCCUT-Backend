@@ -81,7 +81,7 @@ def newsList():
         index = request.args.get("index")
 
         if index == None:
-            result = News.query.limit(pageCount).all()
+            result = News.query.offset(int(pageCount)*int(index)).limit(pageCount).all()
             return formattingData(code=200,msg='Fetch success.',data=[new.serialize() for new in result])
 
 
