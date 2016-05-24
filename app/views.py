@@ -101,11 +101,16 @@ def videoList():
 
         print(mark)
 
-        if index == None or category == None or mark == None:
+        if index == None or category == None:
             return formattingData(code=-1,msg='Sorry,request paramaters are missing!')
 
         cateMap = defCat[category]
-        result = Video.query.filter(Video.leve1 == cateMap).filter(Video.leve2 == "走近科学").offset(int(pageCount)*int(index)).limit(pageCount).all()
+
+        if mark == None:
+            result = Video.query.filter(Video.leve1 == cateMap).offset(int(pageCount)*int(index)).limit(pageCount).all()
+        else:
+            result = Video.query.filter(Video.leve1 == cateMap).filter(Video.leve2 == str(mark)).offset(int(pageCount)*int(index)).limit(pageCount).all()
+
         return formattingData(code=200,msg='Fetch videos success.',data=[video.serialize() for video in result])
 
 
