@@ -13,10 +13,10 @@ import base64
 
 pageCount = 20
 defCat = {
-    "documentary": "",
-    "study": "",
-    "cartoon": "",
-    "movie": ""
+    "documentary": "纪录片",
+    "study": "学习",
+    "cartoon": "动漫频道",
+    "movie": "影视"
 }
 
 @app.route('/')
@@ -74,7 +74,7 @@ def register():
         return formattingData(code=-1,msg='Sorry,register failed.',data=[])
 
 
-@app.route('/api/newslist',methods=['POST'])
+@app.route('/api/newslist',methods=['POST','GET'])
 def newsList():
 
     try:
@@ -91,22 +91,26 @@ def newsList():
     except KeyError,e:
         return formattingData(code=-1,msg='Sorry,fetch list Fail.')
 
-@app.route('/api/vides',methods=['POST'])
+@app.route('/api/vides',methods=['POST','GET'])
 def videoList():
 
     try:
         index = request.args.get("index")
         category = request.args.get("category")
+        mark = request.args.get("mark")
 
-        if index == None or category == None:
+        print(mark)
+
+        if index == None or category == None or mark == None:
             return formattingData(code=-1,msg='Sorry,request paramaters are missing!')
 
         cateMap = defCat[category]
-        result = Video.query.offset(int(pageCount)*int(index)).filter(Video.leve1 == cateMap).limit(pageCount).all()
+        result = Video.query.filter(Video.leve1 == cateMap).filter(Video.leve2 == "走近科学").offset(int(pageCount)*int(index)).limit(pageCount).all()
         return formattingData(code=200,msg='Fetch videos success.',data=[video.serialize() for video in result])
 
 
     except KeyError,e:
+        print(e)
         return formattingData(code=-1,msg='Sorry,fetch video list fail.',data=[])
 
 @app.route('/api/commentlist',methods=['POST'])
