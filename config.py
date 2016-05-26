@@ -2,7 +2,7 @@ __author__ = 'Maru'
 
 import os
 
-dbhost = 'localhost:3388'
+dbhost = 'localhost:3306'
 dbuser = 'root'
 dbpass = ''
 dbname = 'iCCUT'
