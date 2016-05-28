@@ -59,7 +59,8 @@ class Comment(db.Model):
             "id": self.id,
             "content": self.content,
             "datetime": self.datetime.strftime('%Y-%m-%d'),
-            "good": self.good
+            "good": self.good,
+            "user": self.user.username
         }
 
 historys = db.Table('historys',

@@ -102,7 +102,7 @@ def videoList():
         print(mark)
 
         if index == None or category == None:
-            return formattingData(code=-1,msg='Sorry,request paramaters are missing!')
+            return formattingData(code=-1,msg='Sorry,request paramaters are missing!',data=[])
 
         cateMap = defCat[category]
 
@@ -117,6 +117,23 @@ def videoList():
     except KeyError,e:
         print(e)
         return formattingData(code=-1,msg='Sorry,fetch video list fail.',data=[])
+
+
+@app.route('/api/videoSearch',methods=['POST','GET'])
+def videoSearch():
+    try:
+        key = request.args.get("key")
+
+        if key == None:
+            return formattingData(code=-1,msg='Sorry,args missing!',data=[])
+
+        result = Video.query.filter(Video.leve2.like("%"+str(key)+"%")).limit(pageCount).all()
+
+        return formattingData(code=200,msg='Fetch success',data=[video.serialize() for video in result])
+
+    except Exception,e:
+        return formattingData(code=-1,msg='Sorry,fetch search result fail',data=[])
+
 
 @app.route('/api/commentlist',methods=['POST'])
 def commentList():
@@ -142,13 +159,16 @@ def commitComment():
     user_id = request.args.get("uid")
     video_id = request.args.get("vid")
 
-    if content == None or user_id == None or video_id == None:
+    if content == None or video_id == None:
         return formattingData(code=-1,msg='Args missing.',data=[])
+    elif user_id == None:
+        user_id = None
 
     try:
         com = Comment(content=content,user_id=user_id,video_id=video_id)
         db.session.add(com)
         db.session.commit()
+        return formattingData(code=200,msg='Submit success.',data=[])
     except KeyError,e:
         return formattingData(code=-1,msg='Submit fail.',data=[])
 
